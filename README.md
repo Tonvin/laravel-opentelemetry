@@ -24,3 +24,12 @@ cd signoz/deploy/
 ./install.sh
 ```
  <https://signoz.io/blog/opentelemetry-php>
+
+## Metry
+
+```php
+use App\Facades\Metry;
+
+Metry:start('span');
+Metry:stop('span');
+```
