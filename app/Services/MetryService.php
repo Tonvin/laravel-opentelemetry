@@ -34,15 +34,20 @@ class MetryService
 				$exporter
 			)
 		);
-		$this->tracer = $tracerProvider->getTracer('io.opentelemetry.contrib.php');
-		$this->rootSpan = $this->tracer->spanBuilder('root')->startSpan();
+		$this->trancer = $tracerProvider->getTracer('io.opentelemetry.contrib.php');
+		$this->rootSpan = $this->trancer->spanBuilder('root')->startSpan();
 		$this->rootScope = $this->rootSpan->activate();
     }
 
     public function start($span)
     {
-        $this->spans[$span]  = $this->tracer->spanBuilder($span)->startSpan();
+        $this->spans[$span]  = $this->trancer->spanBuilder($span)->startSpan();
         $this->scopes[$span] = $this->spans[$span]->activate();
+    }
+
+    public function addEvent($span, $event)
+    {
+        $this->spans[$span]->addEvent($event);
     }
 
     public function stop($span)

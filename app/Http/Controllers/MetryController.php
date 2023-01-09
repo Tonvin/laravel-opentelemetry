@@ -17,9 +17,11 @@ class MetryController extends BaseController
 	{
         echo '<p>Start probe apple</p>';
         Metry::start('apple');
+        Metry::addEvent('apple', 'Boot');
         usleep(2000);
         $model = new Test;
         $model->test();
+        Metry::addEvent('apple', 'Finish');
         Metry::stop('apple');
         echo '<p>End Probe apple</p>';
 	}
