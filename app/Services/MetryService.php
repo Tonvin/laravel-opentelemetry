@@ -9,6 +9,7 @@ use OpenTelemetry\Contrib\Otlp\SpanExporter;
 use OpenTelemetry\SDK\Trace\SpanExporter\ConsoleSpanExporter;
 use OpenTelemetry\SDK\Trace\SpanProcessor\SimpleSpanProcessor;
 use OpenTelemetry\SDK\Trace\TracerProvider;
+use Illuminate\Support\Facades\Route;
 
 class MetryService
 {
@@ -25,8 +26,9 @@ class MetryService
 
     public function __construct()
     {
-		putenv('OTEL_SERVICE_NAME=Laravel');
-		$transport = (new OtlpHttpTransportFactory())->create('http://localhost:4318/v1/traces', 'application/x-protobuf');
+		putenv('OTEL_SERVICE_NAME='.env('OTEL_SERVICE_NAME', 'Laravel'));
+        $tracerEndpoint = env('OTEL_TRACER_ENDPOINT', 'http://localhost:4318/v1/traces');
+		$transport = (new OtlpHttpTransportFactory())->create($tracerEndpoint, 'application/x-protobuf');
 		$exporter = new SpanExporter($transport);
 
 		$tracerProvider =  new TracerProvider(
@@ -35,7 +37,11 @@ class MetryService
 			)
 		);
 		$this->trancer = $tracerProvider->getTracer('io.opentelemetry.contrib.php');
-		$this->rootSpan = $this->trancer->spanBuilder('root')->startSpan();
+
+        $rootSpanName = Route::getCurrentRoute()->uri;
+
+		$this->rootSpan = $this->trancer->spanBuilder($rootSpanName)->startSpan();
+
 		$this->rootScope = $this->rootSpan->activate();
     }
 
