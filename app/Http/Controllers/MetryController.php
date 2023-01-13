@@ -11,9 +11,9 @@ use App\Facades\Metry;
 use App\Models\Test;
 
 
-class MetryController extends BaseController
+class FruitController extends BaseController
 {
-	public function probe()
+	public function index()
 	{
         echo '<p>Start probe apple</p>';
         Metry::start('apple');
