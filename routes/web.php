@@ -15,4 +15,4 @@ use App\Http\Controllers\MetryController;
 |
 */
 
-Route::get('/metry', [MetryController::class, 'probe']);
+Route::get('/fruit', [FruitController::class, 'index']);
